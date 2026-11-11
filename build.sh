@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Builds MD Viewer.app (+ Quick Look extension), signs it, installs to /Applications and registers it.
+# Builds MD Viewer.app (+ Quick Look extension), signs it, installs it and registers the extension.
 #   ./build.sh            build + install
 #   ./build.sh --no-install
 set -euo pipefail
@@ -10,7 +10,10 @@ TARGET="$ARCH-apple-macos13.0"
 BUILD=build
 APP="$BUILD/MD Viewer.app"
 APPEX="$APP/Contents/PlugIns/MDPreview.appex"
-INSTALL_DIR=/Applications
+# Install location: /Applications when writable, otherwise ~/Applications. Override with INSTALL_DIR=...
+if [[ -z "${INSTALL_DIR:-}" ]]; then
+  if [[ -w /Applications ]]; then INSTALL_DIR=/Applications; else INSTALL_DIR="$HOME/Applications"; fi
+fi
 # Signing identity: first "Apple Development" cert, else ad-hoc. Override with SIGN_ID=...
 SIGN_ID=${SIGN_ID:-$(security find-identity -v -p codesigning | awk -F'"' '/Apple Development/{print $2; exit}')}
 SIGN_ID=${SIGN_ID:--}
@@ -49,6 +52,7 @@ codesign --verify --deep --strict "$APP"
 [[ "${1:-}" == "--no-install" ]] && { echo "✓ Built: $APP"; exit 0; }
 
 echo "→ Installing to $INSTALL_DIR"
+mkdir -p "$INSTALL_DIR"
 DEST="$INSTALL_DIR/MD Viewer.app"
 LSREG=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
 [[ -d "$DEST" ]] && { pluginkit -r "$DEST/Contents/PlugIns/MDPreview.appex" 2>/dev/null || true; rm -rf "$DEST"; }

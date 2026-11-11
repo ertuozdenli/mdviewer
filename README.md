@@ -18,7 +18,17 @@ MD Viewer is a small native macOS app with a Quick Look extension. It has no dep
 
 ## Install
 
-You need Xcode (for `swiftc`). The build targets macOS 13 and later; it has been tested on macOS 27 on Apple silicon.
+Paste this into Terminal:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ertuozdenli/mdviewer/main/install.sh | zsh
+```
+
+The installer downloads the source, builds it on your Mac and installs `MD Viewer.app` with its Quick Look extension. Because the app is built locally, there is no prebuilt binary for Gatekeeper to block.
+
+It needs the Xcode Command Line Tools, not full Xcode. If they are missing, the installer tells you to run `xcode-select --install` first. The build targets macOS 13 and later; it has been tested on macOS 27 on Apple silicon.
+
+### Build it yourself
 
 ```sh
 git clone https://github.com/ertuozdenli/mdviewer.git
@@ -26,11 +36,15 @@ cd mdviewer
 ./build.sh
 ```
 
-`build.sh` compiles the app and the extension, signs them, copies `MD Viewer.app` to `/Applications` and registers the Quick Look extension. It signs with the first "Apple Development" certificate in your keychain and falls back to ad-hoc signing if you have none. Set `SIGN_ID` to choose a certificate yourself.
+`build.sh` compiles the app and the extension, signs them, copies `MD Viewer.app` to `/Applications` (or `~/Applications` if that is not writable) and registers the Quick Look extension. It signs with the first "Apple Development" certificate in your keychain and falls back to ad-hoc signing if you have none. Set `SIGN_ID` to choose a certificate, or `INSTALL_DIR` to choose the location.
 
 To build without installing, run `./build.sh --no-install`. The app lands in `build/`.
 
-There is no prebuilt download yet, because distributing one needs a notarized Developer ID build.
+### Uninstall
+
+```sh
+rm -rf "/Applications/MD Viewer.app" && qlmanage -r
+```
 
 ## Use
 
