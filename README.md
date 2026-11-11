@@ -4,9 +4,11 @@ Press **Space** on a Markdown file in Finder and see it rendered, not as raw tex
 
 MD Viewer is a small native macOS app with a Quick Look extension. It has no dependencies and no Xcode project: one script builds, signs and installs it.
 
-![Raw Markdown turning into a rendered preview after pressing Space](docs/demo.gif)
+| Without MD Viewer | With MD Viewer |
+|---|---|
+| ![Pressing Space on a Markdown file shows its raw text](docs/demo-before.gif) | ![Pressing Space on the same file shows it rendered](docs/demo-after.gif) |
 
-<sub>The demo is generated off-screen from [`docs/demo.md`](docs/demo.md) with the same renderer and stylesheet the extension uses (`Scripts/make-demo-gif.sh`). The real Quick Look panel adds the standard macOS title bar.</sub>
+<sub>The desktop, Finder window and panel frame in the demo are an illustration. The document in the right-hand panel is rendered from [`docs/demo.md`](docs/demo.md) by the extension's own renderer and stylesheet (`Scripts/make-demo-gif.sh`).</sub>
 
 ## What you get
 
